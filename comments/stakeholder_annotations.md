@@ -11,15 +11,11 @@ The raw response data for each annotation is stored in triples like this:
 | annotation IRI | hasBody | "Some comment text" |
 | annotation IRI | hasCategory | "Surprising" |
 
-This can be easily aggregated into an output table with the following structure, accessed via API:
+This is aggregated into an ouput .csv with the following format:
 
-| Participant | Object | Category | Comment |
-|-------------|--------|----------|---------|
-| joe.bloggs@example.com | Example Painpoint | Surprising | null |
-| joe.bloggs@example.com | Example Stakeholder | Question | "blahblahblah" |
-...
-
-This may then be further aggregated as desired -- for example, into an equivalent data format as the table in the existing Powerpoint doc.
+| Commented By (email) | Comment | Category | Stakeholder/Painpoint | Stakeholder Name | Painpoint Name |
+|----------------------|---------|----------|-----------------------|------------------|----------------|
+| joe.bloggs@example.com | "Some comment text" | Suprising | Painpoint | A stakeholder | A painpoint |
 
 ## Process
 
@@ -94,9 +90,48 @@ Clicking on a painpoint brings up the annotation interface. A user can assign a 
 
 The painpoint annotation data goes into the UserMapAnnotationBag (a database table) for that user. Each UserMapAnnotationBag is associated with a single user and a single map.
 
-### Output data
+## Output
 
-An API is called which aggregates all of the UserMapAnnotationBags for the target map together, and returns a tabular data file similar to the one outlined in the objective. 
+### Calling the annotation report API
+
+An API can be called which aggregates all of the UserMapAnnotationBags for the target map together. API calls are formatted as follows:
+
+    https://staging.ecosystem.guide/api/annotations/report?map=<map_iri>
+
+where `<map_iri>` is the IRI for the map you want the annotation report for (can be viewed in the Admin panel).
+
+Note that the `map` parameter may be either the full IRI for a map -- for example, `http://visual-meaning.com/rdf/maps/eom-mgs-ds` -- or a shorthand form we are calling a qname. Qnames rely on the fact that for most IRIs the first chunk of an IRI is boilerplate from IRI to IRI -- in the example here the interesting part of the IRI (the qname) is the `maps/eom-mgs-ds` bit, while the preceding `http://visual-meaning/rdf/` part is uninteresting for the purposes of identifying a map.
+
+So, instead of passing `http://visual-meaning/rdf/` as part of every map IRI, we can instead shorthand this part of the IRI by substituting `vm:` in its place. This means that calling
+
+    https://staging.ecosystem.guide/api/annotations/report?map=vm:maps/eom-mgs-ds
+
+is the same as calling
+
+    https://staging.ecosystem.guide/api/annotations/report?map=http://visual-meaning/rdf/maps/eom-mgs-ds
+
+The API may also be called with an optional `raw` parameter. The default output behaviour (see below) is to do some light aggregation so that each user's comments on a given stakeholder or painpoint are aggregated up into a single row with multiple comments. Passing `raw=true` to the API will disable this aggregation and output one row per comment.
+
+    https://staging.ecosystem.guide/api/annotations/report?map=vm:maps/eom-mgs-ds&raw=true
+
+A user must be logged in with an SMP user account to use this API. More granular permissions are planned, but not yet implemented.
+
+### API output data format
+
+Making a request to the annotation report API (or hitting it in a browser) will return a .csv formatted as follows:
+
+| Commented By (email) | Comment | Category | Stakeholder/Painpoint | Stakeholder Name | Painpoint Name |
+|----------------------|---------|----------|-----------------------|------------------|----------------|
+| joe.bloggs@example.com | Some comment text | Suprising | Painpoint | A stakeholder | A painpoint |
+
+| Column name | What is it? |
+|-------------|-------------|
+| Commented By (email) | The email identity of the user leaving the comment. |
+| Comment | The body of the comment text. If a user leaves multiple comments on the same object with the same category, these comments will be concatenated together into a single comment. |
+| Category | The comment category (e.g "Surprising", "Interesting") |
+| Stakeholder/Painpoint | Whether the comment was left on a stakeholder object ("Stakeholder") or a painpoint object ("Painpoint"). |
+| Stakeholder Name | If the comment was left on a stakeholder, this is the human-parsable name of that stakeholder. If the comment was left on a painpoint, this is name of the parent stakeholder to the painpoint. |
+| Painpoint Name | If the comment was left on a painpoint, this is the human-parsable name of that painpoint. If the comment was left on a stakeholder, this cell will be blank. |
 
 ## Questions:
 
