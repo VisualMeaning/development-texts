@@ -16,7 +16,7 @@ The service we select should fulfil this (non-exhaustive) list of basic tracking
 
 The standard method of measuring time-on-page is to measure the time between a user arriving at one page on your site, and then navigating to another page on your site. However, if a user recieves a direct link to a single page (for example, a map), spends all their time on that one page, and never navigates to another page on the site, then no time-on-page stat is recorded as the analytics platform has no way of knowing when they left the page.
 
-If the typical user flow for leaving a map is to close the browser tab, or do anything that's not visiting somehwere else on the VM site, then this would unfortunately make it quite difficult for us to know how long a user spends looking at a given map even if we're using an analytics service that records this stat.
+While the URL does change as a user clicks around a map, this happens frequently enough that if the analytics platform counts this as a page change, then the average time on page will be artificially small. On the other hand if it only counts navigating away from the map as a page change then we might not get any time-on-page stats at all. THe only way to know for sure is to hook the SMP up to a free trial and see how it works in practice.
 
 ### User identities
 
@@ -55,7 +55,7 @@ What passes for the industry standard because the barrier to entry is so low. Fr
 
 [Link to demo](https://app.usefathom.com/share/krtexeuo/serverless+laravel)
 
-Positions itself as an alternative to Google Analytics that offers much of the same functionality with none of the privacy concerns. Converts IPs to hashes (that  can't be backtraced to users) and then scrubs the hashes after 24 hours. Billed on page views, but we are exceedingly unlikely to exceed the cheapest tier of $14 per month for 100k page views. Has some handy additional features like uptime monitoring. Can bypass adblockers by configuring custom subdomain.
+Positions itself as an alternative to Google Analytics that offers much of the same functionality with none of the privacy concerns. Converts IPs to hashes (that  can't be backtraced to users) and then scrubs the hashes after 24 hours. Billed on page views, but we are exceedingly unlikely to exceed the cheapest tier of $14 per month for 100k page views. Has some handy additional features like uptime monitoring. Can bypass adblockers by configuring custom subdomain. A big caveat here, though, is that Fathom only tracks things at a very high level -- there's no option to drill down into specific OS versions or browser versions.
 
 | Criteria | Result | Notes |
 | --- | --- | --- |
@@ -64,22 +64,37 @@ Positions itself as an alternative to Google Analytics that offers much of the s
 | **Cost** | $14/mo for 100k page views | 7 day free trial available for testing purposes. |
 | **Installation** | Good | Installed via script tag. |
 
-**Summary**: A decent hosted solution that ticks all of the boxes as long as we don't want specific device information.
+**Summary**: A decent hosted solution that technically ticks all of the boxes, but the data it collects is possibly a bit too high level compared to other options.
 
 ### GoatCounter
 
 [Link to demo](https://stats.arp242.net/?hl-period=week&period-start=2021-06-30&period-end=2021-07-07&filter=&as-text=off&daily=off)
 
-Driven by the same privacy requirements as Fathom, but with the additional requirement that the codebase be properly open source. One minor drawback compared to Fathom is that a GoatCounter unique user is always scoped to a path -- there is no way to aggregate up and get unique users site-wide. It's also not possible to bypass adblockers without self-hosting GoatCounter.
+Driven by the same privacy requirements as Fathom, but with the additional requirement that the codebase be properly open source. Its device drilldowns are far more detailed than Fathom's, breaking things down into a variety of screen sizes, and its OS and browser breakdowns are similarly impressive. Another nice feature is the ability to filter paths via a search box, which is something that is (surprisingly) missing from most other platforms here.
 
 | Criteria | Result | Notes |
 | --- | --- | --- |
-| **Tracking requirements** | 4/5 | GoatCounter does *not* appear to track time-on-page. Also has same high-level device classification as Fathom. |
+| **Tracking requirements** | 4/5 | GoatCounter does *not* track time-on-page. |
 | **GDPR** | Not required |  |
 | **Cost** | €5/mo for 100k page views | Free version available for non-commercial use. |
 | **Installation** | Good | Installed via script tag. |
 
-**Summary**: Cheaper than Fathom and has good policies around open source and access to data, as well as being the easiest service to self-host (if we had to). However, has some flabbiness around which stats are measured and how.
+**Summary**: Cheaper than Fathom and has good policies around open source and access to data, as well as being the easiest service to self-host (if we had to). The catch is that it doesnt track time-on-page.
+
+### Plausible
+
+[Link to demo](https://plausible.io/plausible.io)
+
+Halfway between Fathom and Goatcounter. Open source with excellent documentation. Explicitly tracks entry pages and exit pages, which is a nice feature -- Google Analytics will exhaustively document the path users take around your site, but the most important piece of information there is where they enter and where they leave, which Plausible has. Device is traced at the same high level as Fathom but OS and browser have good drilldowns. I think that while the dashboard looks nice it's potentially a little harder to easily get the information we want out of it as it only presents its page info via a big list, meaning you'd have to open that and then Ctrl-F in the browser to find the thing you want.
+
+| Criteria | Result | Notes |
+| --- | --- | --- |
+| **Tracking requirements** | All | Device is tracked at a desktop/phone/tablet level only. |
+| **GDPR** | Not required |  |
+| **Cost** | £12/mo for 100k page views | 30-day free trial. Also has a cheaper £6/mo for 10k page views tier. |
+| **Installation** | Good | Installed via script tag. |
+
+**Summary**: More attractive than GoatCounter with most of the same features, and it tracks time on page. It might be annoying to extract specifics from it though.
 
 ### Matomo
 
@@ -115,7 +130,14 @@ Has a very similar featureset to Fathom, although it appears to be a bit less ma
 
 * StatCounter ([Link to demo](https://statcounter.com/demo/summary/)) - no device or time-on-page stats and appears to persistently track users, meaning it'd fall foul of GDPR.
 * Count.ly - setup is complicated, pricing is opaque, and there's nothing on the website about privacy. The website doesn't even say what it tracks, although I suspect this is because you have to configure it all manually.
+* Open Web Analytics ([Link to demo](http://demo.openwebanalytics.com/owa/index.php?owa_do=base.reportDashboard&owa_siteId=c9b7d12e322c7c360fb8f7c72ffe4c41)) - free and open source, but no hosted option means we'd have to self-host and maintain it ourselves. It's an older product that's no longer actively developed and the stack for it is relatively complex.
+* Mixpanel - same drawbacks as Matomo, and would also require GDPR consent.
+* Adobe Analytics - enterprise solution with an enterprise price tag.
 
 ## Conclusion
 
-Fathom and GoatCounter are the two most viable candidates. Fathom is more expensive but fulfils all of our requirements. GoatCounter is cheaper but does not track time-on-page -- however this may be a less-useful stat than it seems thanks to the likely path users will take through our site.
+* I was initially quite favourable towards Fathom but the more I look at it the more limited it feels -- it does the bare minimum to technically fulfil our requirements, and no more than that.
+* GoatCounter is a cheap option that might look "functional" compared to other options but which has some of the most detailed data breakdowns. I'd be happy using it and working with it, but it not tracking time-on-page could be a dealbreaker.
+* Plausible.io feels like a good balance between the not-enough-detail of Fathom and the too-much-detail of Matomo. It appears to track everything we want in the way that we want, with the only drawbacks being that the dashboard has made some form-over-function choices that make it a bit harder to extract useful data, and the device data possibly being a little too basic. 
+
+My recommendation is that we try the free trials of [**Plausible**](https://plausible.io/) and/or [**GoatCounter**](https://www.goatcounter.com/) to see how well they meet our needs, and then move to a paid plan if there are no significant issues.
