@@ -6,6 +6,12 @@ Collection of development-led text documents related to technical decision makin
 ## Comments
 
 * [Rethinking zoom](comments/rethinking_zoom.md) - follow up proposal required for design authority.
+* [Implementing Basic Web Analytics for the SMP](comments/analytics_summary.md) - objectives and a summary of options
+* [Backing up the Postgres Databases in Heroku](comments/heroku_pgs_backups.md)
+* [Stakeholder annotations](comments/stakeholder_annotations.md)
+* [Annotation bulk deletion API documention](comments/bulk_delete_annotations.md)
+* [Getting tiles and data from Illustrator to the SMP](comments/from_illustrator_to_SMP.md) - step by step walkthrough.
+* [Tile upload and data ingest notes](comments/data_ingest_gotchas.md) - Notes on various dos/don't dos of the data upload process.
 
 
 ## Records
