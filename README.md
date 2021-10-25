@@ -12,6 +12,7 @@ Collection of development-led text documents related to technical decision makin
 * [Annotation bulk deletion API documention](comments/bulk_delete_annotations.md)
 * [Getting tiles and data from Illustrator to the SMP](comments/from_illustrator_to_SMP.md) - step by step walkthrough.
 * [Tile upload and data ingest notes](comments/data_ingest_gotchas.md) - Notes on various dos/don't dos of the data upload process.
+* [Domain hosting](comments/domain_hosting.md) - an overview of domain hosting options as we want to migrate away from our current provider
 
 
 ## Records
