@@ -20,6 +20,7 @@ Collection of development-led text documents related to technical decision makin
 * [Mapping libraries](records/mapping_libraries.md) - decided to use [Openlayers](https://openlayers.org/).
 * [RDF in Postgres](records/postgres_rdf_json_querying.md) - decided to leave status quo for now.
 * [Working with upstreams](records/working_with_upstreams.md) - proposed process for working with and funding upstream projects.
+* [Process of adding a new string using the Translation component in sm_platform](records/SMP_adding_translation.md)
 
 
 ## Postmortems
