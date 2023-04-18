@@ -21,6 +21,7 @@ Collection of development-led text documents related to technical decision makin
 * [RDF in Postgres](records/postgres_rdf_json_querying.md) - decided to leave status quo for now.
 * [Working with upstreams](records/working_with_upstreams.md) - proposed process for working with and funding upstream projects.
 * [Process of adding a new string using the Translation component in sm_platform](records/SMP_adding_translation.md)
+* [Accessibilities in sm_platform](records/accessibilities.md)
 
 
 ## Postmortems
