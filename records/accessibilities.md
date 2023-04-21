@@ -5,10 +5,10 @@ We improved the accessibility of SMP to help vision impaired people using it wit
 Below listed all the specified behaviours when using a screen reader.
 
 ## Burger menu
-| Object | Behaviour | State | Screen Reader Result |
-|-------------|--------|----------|---------|
-| Open burger button | Focus  | Not Clicked | Button collapsed not pressed |
-| Open burger button | Click  | Clicked | Button expanded pressed |
+| Object | Behaviour | State | Current Screen Reader Result | Desired Result |
+|-------------|--------|----------|---------|---------|
+| Open burger button | Focus  | Not Clicked | Button collapsed not pressed | Button not pressed |
+| Open burger button | Click  | Clicked | Button expanded pressed | Button pressed |
 | Region option | Focus  | Not Clicked | [Region name], button partially pressed |
 | Region option | Click  | Clicked | [Region name], button pressed |
 
@@ -21,27 +21,27 @@ Below listed all the specified behaviours when using a screen reader.
 
 ## Comments panel
 
-| Object | Behaviour | State | Screen Reader Result |
-|-------------|--------|----------|---------|
+| Object | Behaviour | State | Screen Reader Result | Desired Result |
+|-------------|--------|----------|---------|---------|
 | Open comments panel button | Focus | Not Clicked | Comments panel, button not pressed |
 | Open comments panel button | Click | Clicked | Comments panel, button pressed |
 | Expand all button | Click | Clicked | Expand all, button pressed |
 | Expand all button | Focus | Not Clicked | Expand all, button not pressed |
-| Expand arrow button | Click | Clicked | Expand, button pressed |
-| Expand arrow button | Focus | Not Clicked | Expand, button not pressed |
+| Expand arrow button | Click | Clicked | Expand, button pressed | Expand button expanded |
+| Expand arrow button | Focus | Not Clicked | Expand, button not pressed | Expand button collapsed |
 | Add comment button | Focus | Not Clicked | Add comment, button not pressed |
 
 ## Control panel
-| Object | Behaviour | State | Screen Reader Result |
-|-------------|--------|----------|---------|
+| Object | Behaviour | State | Screen Reader Result | Desired Result |
+|-------------|--------|----------|---------|---------|
 | Search bar | Enter text and return | Search results found | Search results list with x items |
 | Search bar | Enter text and return | Search results not found | No results found, earch results list with 0 items |
-| Open filters panel button | Focus | Not Clicked | Filters, button collapsed not pressed |
-| Open filters panel button | Click | Clicked | Filters, button expanded pressed |
+| Open filters panel button | Focus | Not Clicked | Filters, button collapsed not pressed | Filters button not pressed |
+| Open filters panel button | Click | Clicked | Filters, button expanded pressed | Filters button pressed |
 | Open list view panel button | Focus | Not Clicked | List view, button not pressed |
 | Open list view panel button | Click | Clicked | List view, button  pressed |
-| Expand selected item panel button | Focus | Not Clicked | Expand panel, button collapsed not pressed |
-| Expand selected item panel button | Click | Clicked | Expand panel, button expanded pressed |
+| Expand selected item panel button | Focus | Not Clicked | Expand panel, button collapsed not pressed | Expand panel button collapsed |
+| Expand selected item panel button | Click | Clicked | Expand panel, button expanded pressed | Expand panel button expanded |
 | Close selected item panel button | Focus | Not Clicked | Close panel, button |
 
 ## Intro splash
