@@ -26,7 +26,9 @@ export function ExamplePanelComponent(): RNode {
 ```
 There are some panel components that return content of a panel, in those cases we do not want to return a `<div />` of class `vm-float-block` but the wrapping element should have it.
 
-The panel elements on the `vm-float` layer live inside `vm-float-containers` responsible for the layout all of which live in a flexbox containing world ([1](https://github.com/VisualMeaning/sm_platform/pull/746)).
+The panels on the `vm-float` layer exist within `vm-float-containers` sections. Those sections create the layout and should not overlap with each other. 
+
+No panel should live in two sections at a time and any panel flexibility should remain within its containing section ([1](https://github.com/VisualMeaning/sm_platform/pull/746)). Panels within a section should not overlap with each other.
 
 ![Panel Containers](/assets/panel_containers.png)
 
