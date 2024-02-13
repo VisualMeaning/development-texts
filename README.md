@@ -23,6 +23,7 @@ Collection of development-led text documents related to technical decision makin
 * [Working with upstreams](records/working_with_upstreams.md) - proposed process for working with and funding upstream projects.
 * [Process of adding a new string using the Translation component in sm_platform](records/SMP_adding_translation.md)
 * [Accessibilities in sm_platform](records/accessibilities.md)
+* [Improving search](records/improving_search.md) - deciding to try out one or two client-side search libraries
 
 
 ## Postmortems
