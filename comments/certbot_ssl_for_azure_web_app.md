@@ -4,9 +4,23 @@
 
 ### Generate the cert
 
-Install `certbot`:
+Install `certbot` and the route53 plugin:
 
-    sudo apt install certbot python3-certbot-nginx
+    sudo apt install certbot python3-certbot-dns-route53
+
+The plugin can use the standard boto ways of obtaining credentials, but certbot wants to run as root, so need a step for the root user to know where to find your credentials file. Easiest with an environment variable and the `-E` flag for sudo.
+
+    export AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials
+
+Then if we want to renew the cert, all we need to do is:
+
+    sudo -E certbot certonly --dns-route53 -d $DOMAIN
+
+This won't renew the cert if it's not close to expiring. To force a renewal:
+
+    sudo -E certbot certonly --dns-route53 -d $DOMAIN --force-renewal
+
+#### Or instead, manual fallback
 
 Generate a cert for a target domain using DNS challenge type:
 
@@ -15,26 +29,6 @@ Generate a cert for a target domain using DNS challenge type:
 This will tell you to add a DNS TXT record for that domain. Most of our domains are now managed through Amazon Route53, so go there in your browser, find the Hosted Zone that corresponds to the domain you're generating the cert for, and then add the TXT record.
 
 Once the TXT record is saved, tell certbot to continue. It should report success and save your certificate and signing chain to `/etc/letsencrypt/live/$DOMAIN`
-
-### Alternatively...
-
-There's a plugin that lets us automate doing the TXT record faffing in Route53. Install with:
-
-    sudo apt install python3-certbot-dns-route53
-
-This uses standard AWS CLI credentials, but since certbot needs to be run as root, we need to symlink our local user's AWS credentials directory to an equivalent location for root:
-
-    sudo -s
-    ln -s /home/$USER/.aws ~/.aws
-    exit
-
-Then if we want to renew the cert, all we need to do is:
-
-    sudo certbot certonly --dns-route53 -d $DOMAIN
-
-This won't renew the cert if it's not close to expiring. To force a renewal:
-
-    sudo certbot certonly --dns-route53 -d $DOMAIN --force-renewal
 
 ### Convert Let's Encrypt cert files to Private Certificate
 
