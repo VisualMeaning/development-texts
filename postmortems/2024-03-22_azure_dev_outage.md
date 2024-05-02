@@ -102,9 +102,9 @@ Monitoring to detect the outage was ignored, it was only spotted when trying to 
 
 There was clear and regular communication internally about the outage and progress to address it, and although initially stilted, eventually clear and regular communication with line manager (client side) on the matter. 
 
-## Resolutions
+## Remediations
 
-We want to explore adding all the secrets to our own system register; particularly to ensure that there is alway access over leave periods etc. 
+We want to explore adding all the secrets to our own system register; particularly to ensure that there is alway access over leave periods etc. Ask client to add these to their spreadsheet as well. 
 
 We are working to get access to identify all app registrations and enterprise applications, as well as identify owners, and add owners where we do not have two people within our organisation who are registered as owners. 
 
