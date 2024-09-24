@@ -63,6 +63,8 @@ This will open up a complicated set of options. Fortunately we only need to care
 ![Start of CloudFront distribution setup options](images/https_for_s3_static_websites_viewer_policy.png)
 
 - Underneath *Viewer*, the "Viewer protocol policy" should be either "Redirect HTTP to HTTPS" or "HTTPS only". We're not going to the trouble of setting up HTTPS here just to allow HTTP connections anyway.
+- Underneath *Cache key and origin requests*, we need to set a cache policy that tells CloudFront how long to cache content at its edge nodes for before checking the origin for updated content.
+  - If you have selected an S3 bucket as your origin, this will be pre-filled with the `CachingOptimized` policy which has a default TTL of 1 day (i.e. content will be cached for a day). This may be suitable for your requirements, however if you update the content in the S3 bucket it will take up to a day for the change to be reflected in CloudFront's cache, which is what you're actually going to be serving to end users. If you just want to use CloudFront as a secure frontend for the S3 bucket and you're not bothered about its caching functions at all, select the `CachingDisabled` policy instead. This will set the default TTL to 0 seconds - in other words, content will be fetched directly from the origin S3 bucket on every request.
 - Underneath *Web Application Firewall*, pick the appropriate setting depending on how paranoid you are. Since this is a static website I'm of the strong opinion that you probably don't need to pay extra for a WAF.
 - Under *Alternate domain name (CNAME)*, enter the custom domain you want to use, e.g. `subdomain.example.com`.
 - Under *Custom SSL certficate*, open the dropdown. The certficate you requested earlier via Certificate Manager should be listed here. Select it.
@@ -71,16 +73,50 @@ Once finished, click "Create distribution" at the bottom of the page.
 
 The distribution will take a while to create. When it's created, select it from the list of distributions to bring up the origin details and click the *Origins* tab. Select the S3 bucket origin and then "Edit" to bring up the origin details. Underneath *Origin access* there should now be a blue box telling you to give CloudFront permission to access the S3 bucket by adding a policy to the S3 bucket permissions.
 
-![Start of CloudFront distribution setup options](images/https_for_s3_static_websites_cloudfront_policy.png)
+![CloudFront IAM policy box](images/https_for_s3_static_websites_cloudfront_policy.png)
 
 Click the "Copy policy" button inside this blue box, and then "Go to S3 bucket permissions". Open the *Permissions* tab, and paste the policy info into the *Bucket policy* section here, editing as appropriate to make it co-exist nicely with any existing policies that you want to keep.
 
-Go back to CloudFront, and select your distribution again to view the details. Underneath *Distribution domain name* there should be a domain name that starts with a UID and looks like `abcde12345.cloudfront.net`. This is the CloudFront endpoint that it serves your bucket content under - so, if you have an `index.html` file and associated website content at `s3://bucket-name/directory/subdirectory/index.html`, then entering `https://abcde12345.cloudfront.net/directory/subdirectory` into your browser should load the website.
+Go back to CloudFront, and select your distribution again to view the details. Underneath *Distribution domain name* there should be a domain name that starts with a UID and looks like `abcde12345.cloudfront.net`. This is the CloudFront endpoint that it serves your bucket content under - so, if you have an `index.html` file and associated website content at `s3://bucket-name/directory/subdirectory/index.html`, then entering `https://abcde12345.cloudfront.net/directory/subdirectory/index.html` into your browser should load the website.
 
 ### Route 53 (or other DNS)
 
-The final step is to add a DNS record for the custom domain aliasing it so that it points to the CloudFront distribution domain name. Route 53 has fancy dropdowns for this if you select the "Alias" toggle that let you connect to the CloudFront distribution, but ultimately this is just an A record with your custom domain `subdomain.example.com` as the record name and the CloudFront distribution domain name `abcde12345.CloudFront.net` as the record value.
+The final step is to add a DNS record for the custom domain aliasing it so that it points to the CloudFront distribution domain name. Route 53 has fancy dropdowns for this if you select the "Alias" toggle that let you connect to the CloudFront distribution, but if you're not using Route 53 you can just create a CNAME record with your custom domain `subdomain.example.com` as the record name and the CloudFront distribution domain name `abcde12345.cloudfront.net` as the record value.
 
-After the A record has been created, entering `https://subdomain.example.com/directory/subdirectory` into your browser should load the `index.html` at `s3://bucket-name/directory/subdirectory/index.html`, as above.
+After the A record has been created, entering `https://subdomain.example.com/directory/subdirectory/index.html` into your browser should load the `index.html` at `s3://bucket-name/directory/subdirectory/index.html`, as above.
 
 You can test HTTP connections to make sure they're non-functional or redirect to HTTPS as appropriate. If you don't want to expose your entire bucket to the world you can also tweak the IAM policy you added to the S3 bucket to restrict CloudFront's access to specific directories inside the bucket. Finally, you can configure the CloudFront distribution's error pages if you want a slightly nicer experience for the end user than the basic 403/404 pages provided out of the box.
+
+### Avoiding having to request `index.html` directly with a CloudFront function
+
+One of the features we've lost by not configuring our S3 bucket as a static website host is the ability to set a default object to request when hitting the endpoint URL. If the S3 bucket were a static website, we could set `index.html` as the default object, and then `https://subdomain.example.com/directory/subdirectory/` would automatically load `s3://bucket-name/directory/subdirectory/index.html`, with no need to append `index.html` to the end of the request URL. This is worth the tradeoff of not having to make the entire bucket publicly accessible (which is a prerequisite of S3 static websites), but we can also bodge this behaviour back in using a Cloudfront Function.
+
+In the AWS web console, in the left panel, select *Functions*. Create a new function. Give it a name (such as `index-html`) and description, and click "Create function". Then add some function code that looks like this [Stack Overflow answer](https://stackoverflow.com/a/76581267), appropriately modified for your purposes:
+
+```javascript
+function handler(event) {
+      var request = event.request;
+      var uri = request.uri;
+      
+      // Check whether the URI is missing a file name.
+      if (uri.endsWith('/')) {
+          request.uri += 'index.html';
+      } 
+      // Check whether the URI is missing a file extension.
+      else if (!uri.includes('.')) {
+          request.uri += '/index.html';
+      }
+
+      return request;
+    }
+```
+
+Click "Save Changes", switch to the *Publish* tab, and publish the function.
+
+![Apply CloudFront function to distribution](images/https_for_s3_static_websites_add_cloudfront_function.png)
+
+Then select your CloudFront distribution and go to the *Behaviors* tab. You should have one default behaviour for all requests (\*). Select it and open the Edit interface. Scroll to the bottom, where you should see a section called *Function associations*. Here you should set the "Viewer request" function type to "CloudFront Functions", and select the `index-html` function you just published. Then save the changes.
+
+This function will now run on every request, and will rewrite incoming requests that do not already include a file name to add `index.html` on the end before passing them on to the origin S3 bucket.
+
+The drawback of this method is that you're now running this CloudFront Function on *every* request to your website, which is additional cost - however it's [comparatively cheap](https://aws.amazon.com/cloudfront/pricing/) at $0.10 per 1 million invocations, compared to $1.00 per 1 million HTTPS requests.
