@@ -6,22 +6,8 @@ Sets of tiles and labels and their associated data can be considered lenses. We'
 
 Please note that a number of these are the definitions proposed in the Platform Glossary by MN. 
 
-### Map
-We have two concepts of a map:
-1. Django map
-* This is better thought of as being a set of Maps that we feel make up a map model and belong together on the same Map IRI. Ultimately this should be renamed in Django, and potentially to Project. 
-2. Map 
-* A map embodies a consistent geography for Labels and Areas.
-
-### Project
-We have two concepts of a project:
-1. Django Project
-* This is better thought of as where the units of permission that maps refer to exist. The main difference between projects is their differing whitelists. This should probably be renamed in Django, and potentially to Whitelist or Permission Unit or something referencing that difference. 
-2. Client Project
-* This is a contract, or series of contracts, with a client that revolve around a particular topic or outcome. These are usually correlated with sets of key stakeholders and an audience that would define a Django Project. 
-
 ### Geography
-NB: 'geography' has no concrete implementation in the platform, where as maps, lenses, detail levels all have code. It's a conceptual tool for helping us think about how we use maps and lenses.
+'Geography' has no concrete implementation in the platform, where as maps, lenses, detail levels all have code. It's a conceptual tool for helping us think about how we use maps and lenses.
 
 The embodied spatial metaphor* of a map, borrowing design tropes from geographic maps, provides a context for arranging abstract concepts, making them concrete and graspable, and their relations meaningful.
 
@@ -35,7 +21,7 @@ To complement the Shared Meaning Platform, Semantic Tools (that are a plug-in to
 
 Then concept of a lens on the Shared Meaning Platform must translate to how maps are created in and exported from Adobe Illustrator. 
 
-### Starting from Layers
+### Layer / detail level
 
 Layers are a concept in Adobe Illustrator, that their [help docs](https://helpx.adobe.com/lv/illustrator/how-to/ai-layers-basics.html#:~:text=Layers%20are%20like%20transparent%20folders,stack%20in%20the%20Layers%20panel.) describe as being:
 * "Layers are like transparent folders for managing content"
@@ -47,39 +33,40 @@ MN has also described these as "a named top level grouping of graphical objects 
 
 For a given Adobe Illustrator file that is a map destined for the Shared Meaning Platform, **a layer which has been made semantic is a detail level.** For a layer to be semantic, it must have had '-~' inserted into the front of its layer name so that it can be picked up by the Semantic Tools.
 
-### A set of detail levels
+### Set of detail levels
 A set of detail levels which share the same geography and also have consistency of platforms remaining in the same place should be designed to create the illusion of zoom. 
 
 That is to say, a detail level of the lowest number (1) should contain the lowest amount of detail (fewest number of vignettes and labels, and most minimal visual complexity) and appear to be the most zoomed out version of the set of detail levels. It should be assumed that the least detailed detail level will be viewed as a whole.
 
- A detail level of the highest number should contain the highest amount of detail (all of the vignettes and labels possible in the set and the most visual complexity) and appear to be the most zoomed in version of the set of detail levels. The most detailed detail level should also not be expected to be viewed as a whole, and only as parts where users are zoomed in. 
+A detail level of the highest number should contain the highest amount of detail (all of the vignettes and labels possible in the set and the most visual complexity) and appear to be the most zoomed in version of the set of detail levels. The most detailed detail level should also not be expected to be viewed as a whole, and only as parts where users are zoomed in. 
 
-The least detailed detail level should not contain any labels that are not represented on more detailed levels. Those labels may be hidden, but they should be present. 
+The least detailed detail level should not contain any label that is not represented on more detailed levels. Those labels may be hidden, but they should be present. 
 
 **A complete set of detail levels makes up a lens.**
 
-#### A lens
+### Lens
 
 MN proposed the following definition for lens: 
 "A unit of content at the level above a detail level and beneath a map, which can be spatially and temporally related or unrelated in various ways which need to be specified. Why the name 'Lens'? A lens (physical object) is transparent; you look through it at stuff. Our lenses are structured presentations of model content with visual language applied in order to make meaningful distinctions between dimensions of the data. So a lens is never, in itself, displayed; we look at a view of model content, as it were, through a lens."
 
 "Where lenses represent the same conceptual space, they should share geography."
 
-### A set of lenses
+### Set of lenses / Lens stack
 
 **A set of lenses may make up a map.** For this to be true, they must share geography, but might not share the same platforms.
 
 A set of lenses that form a map might have different platform locations due to a change in time state causes the platforms to change.
 Differing lenses for the same map might cover different sub-sets in a recursive population, or introduce different scenarios for the same geography. 
 
-The current implementation of the Shared Meaning Platform makes little room for a Map (as a thing which appears in the "Map Switcher") to be anything other than a single lens (although this may be a child lens together with its parent/s). 
-**It is not clear if a map should be able to be more clearly defined as a set of child and parent lenses, evern where those child lenses are only siblings to one another, and are not intended to be viewed together.**
-_AD may wish to check this with MP_
+The current implementation of the Shared Meaning Platform makes little room for a Map (as a thing which appears in the "Map Switcher") to be anything other than a single lens (although this may be a child lens together with its parent/s).
+
+**It is not clear if a map should be able to be more clearly defined as a set of child and parent lenses, even where those child lenses are only siblings to one another, and are not intended to be viewed together.**
+TODO: _AD may wish to check this with MP_
 
 For lenses to be in a set that makes up a map, typically there will be parent and child relationships between the lenses. 
 
 A parent lens should represent all the structure and context which does not change for the children. 
-Child lenses may only add information (i.e. they may not subtract it) because they inherit lenses from their parents. They do not necessarily need to inherit tiles / visuals from their parents, although the current expectation captured in the Semantic Export Tooling is that children are overlays, and do expect to inherit tiles / visuals from their parents.
+Child lenses may only add information (i.e. they may not subtract it) because they inherit lenses from their parents. They do not necessarily need to inherit tiles / visuals from their parents, although the current expectation captured in the Semantic Export Tooling is that children are overlays, and do expect to inherit tiles / visuals from their parents. Due to the nature of overlay visualization, a set of lenses can also be called a lens stack, where the child lens visuals sit on top of its parent's down until the greatest parent.
 
 Improvements to Semantic Tooling would allow for an indication of whether or not something is an overlay in addition to being a child lens. 
 
@@ -96,6 +83,7 @@ A map IRI is inserted in a field called "Project" in the Semantic Tree Tools pan
 
 ### Zoom levels
 
+Zoom level is separated from detail level as they comply to the devices capability rather than model.
 _Do zoom levels need some kind of definition or starting explanation here?_
 _AD may wish to check this_
 
@@ -108,9 +96,14 @@ The full range for zoom levels for a map is (at present) 0 - 7, but this is clam
 
 Detail levels must sequentially apply to the zoom levels. 
 
-It would not be permissiable for a detail level from the same lens to apply to the same zoom level (although this is expected for a parent and child lens to each have a detail level applied to a given zoom level).
+It would not be permissiable for detail levels from the same lens to apply to the same zoom level (although this is expected for a parent and child lens to each have a detail level applied to a given zoom level).
 
-Each zoom level has a fixed resolution in the current implementation of the Shared Meaning Platform (each tile has a resolution of 256 pixels by 256 pixels):
+Zoom levels have increasing visual fidelity of elements the higher the number goes. As such the geophraphy of the carpet where all elements sit on also has increased fidelity tide to resolution.
+
+The large geography image is divided into smaller tiles that load concurrently, allowing users to view sections of the map progressively without waiting for the entire image to load. This helps accommodate cognitive load considerations and improves user experience by minimizing waiting time.
+
+Tiles have a fixed dimension of 256x256. Each zoom level resolution increases by a constant factor for consistent change perception between every two neighbouring zooms.
+
 | **Zoom level number** | **Total number of tiles** | **Number of columns and rows of tiles** | **Total resolution (px)** |
 | ---: | ---: | ---: | ---: |
 | 0 | 1 | 1 | 256 x 256 |
@@ -123,11 +116,11 @@ Each zoom level has a fixed resolution in the current implementation of the Shar
 | 7 | 16,384 | 128 | 32,768 x 32,768 |
 
 #### Issues with the current implementation of zoom levels
-In the current implementation of the Shared Meaning Platform, this means that the resolution of a monitor that a map is displayed on can determine which zoom level a user lands on when viewing the map. Annecdotally, most laptop users with an HD screen will land on zoom level 2. 
+In the current implementation of the Shared Meaning Platform, the resolution of a monitor that a map is displayed on determines which zoom level a user lands on when viewing the map. Annecdotally, most laptop users with an HD screen will land on zoom level 2. 
 
-If a detail level has only been applied to zoom levels 0 and 1, then most of our users will not say that detail level. This is to say nothing of users with QHD, ultra wide HD, or 4k screens. 
+If a detail level has only been applied to zoom levels 0 and 1, then most of our users will not see any detail level. This is to say nothing of users with QHD, ultra wide HD, or 4k screens. 
 
-##### Plans for dynamic zoom level switching based on user display size
+#### Plans for dynamic zoom level switching based on user display size
 
 To improve implementation of zooming on the platform, detail lenses would become the dominant experience, and would be available at all resolutions necessary for a user's screen, so that the user experience of landing on a map and zooming in to it is not altered by the resolution of the user's monitor. 
 
@@ -170,12 +163,20 @@ Improvements to the semantic tools would allow users to specificy whether a chil
 
 ### Introduce a compositor
 
-_AD likely needs to add to this_
-Improvements to the tiling pipeline and/or Shared Meaning Platform could potentially introduce a compositor that would ensure that the tiles for a given child lens are one set that includes the visuals from both the child lens and any relevant parent lens. This would ensure that only one set of tiles is ever relied on for display, and address a number of current issues. 
+Improvements to the tiling pipeline and/or Shared Meaning Platform could potentially introduce a compositor that would ensure that the tiles for a given child lens are one set that includes the visuals from both the child lens and any relevant parent lens. This would ensure that only one set of tiles is ever relied on for display, and address a number of current issues.
 
-This would not address issues with labels ...
+This would not address composition of lenses and labels.
 
 ## Lens Nodes for Domain-Aware Lenses
+### Domains
+Domains are Shared Meaning Platform specific parameters that provide another layer of content filtering. They are meant to be used as switching tool between states on the same geography. Such state for domains define spatial variance or contextual variability, where the properties or characteristics of something vary across spaces rather than over time.
 
-_something needs to be said here, and I have no idea what_
+The model classifies domains/instances of same type or characteristics into domain types. A combination of instances between domain types creates the context.
+
+### Lens Nodes
+While a piece of content may have several contexts, map objects (labels) may exist on only one space or one lens for each context.
+Lens nodes or map of lens nodes are connectors between lenses pertaining to each context. Their function is to translate domain instance combinations to a single lens.
+
+While still at model level, there is still no intention on baking in the semantic tooling and constructing them into the model can be a complicated manual process.
+
 
