@@ -38,16 +38,17 @@ The path consists of several components, each controlling navigation within the 
 1. **Page** (`/maps/`): Directs the user to either the main map page or the map terms page, where a list of all map terms is displayed.
    - Possible values: `maps`, `mapterms`
 2. **Map** (`/mgs-ds/`): Represents the map path, defining which map data to display.
-3. **View** (`/hr/`): Represents a specific view. Each map can contain multiple views, and this part controls which one is shown.
+3. **View (optional)** (`/hr/`): Represents a specific view. Each map may contain multiple views, and this part controls which one is shown.
+- **Note**: Some older maps, such as `/maps/lotus`, do not have views, but views are required for all new maps.
 
 ### Query Parameters (in order of appearance)
 
 Query parameters are key-value pairs appended to the URL after the `?` symbol. They serve two main types of functions in our app:
 
 1. **Domain Type Query Parameters**  
-   These parameters define the map's domain, such as region or type, and do not reset when filters are cleared.
-
+These parameters define the map's domain, such as region or type, and act as their own filtering layer. Unlike other filters, domains work with a logical AND in combination with other domains and filters. Domains can also support logical OR with the use of the `+` symbol.  
    - **Examples**:
+     - `domain-Force=_police_force+military_force` – In this case, the domain is multi-domain, meaning it includes both `police_force` and `military_force` as separate filters.
      - `domain-Region=_Brazil+_China+_Russia`
      - `domain-BusinessService=_business-service_crime-prevention-service`
      - `domain-PoliceForce=_police-force_leicestershire`
@@ -72,7 +73,12 @@ Query parameters are key-value pairs appended to the URL after the `?` symbol. T
 
 **Example**: `#_stakeholder_distributor-owners`
 
-The fragment (following the `#`) always appears at the end of the URL and points to a specific section on the page. It serves two main purposes:
+In our application, the fragment (following the `#`) always appears at the end of the URL and serves a specific purpose that differs slightly from traditional URL fragment behavior. Unlike typical web applications where the fragment points to an HTML element's `id`, in our platform, fragments refer to data elements with their own unique identifiers, known as IRI (Internationalized Resource Identifiers).
 
-1. **Scrolling and Highlighting**: Automatically scrolls to or highlights a component or section within the page, often in the Maps view.
-2. **Item Reference**: Points to a specific item in the selected item panel, creating a direct reference for easier navigation.
+The fragment serves two main purposes:
+
+1. **Navigating to Data Elements**: The fragment helps reference a specific data element in the application, which may not correspond directly to a static HTML element but to a data item identified by its IRI. For example, `#_stakeholder_distributor-owners` refers to a data item identified by the IRI.
+   
+2. **Item Reference**: Fragments are used to create direct references to data items, enabling precise navigation to and interaction with specific data within the application. These IRIs do not include namespaces (prefixes), which are typically handled by `rdf.js` in our system. The fragment values are stripped of namespace prefixes and contain only the part of the IRI relevant to our platform’s identifiers.
+
+**Note**: This behavior applies to all values in the query parameters, which are also based on IRI identifiers without namespaces.
