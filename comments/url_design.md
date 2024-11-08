@@ -41,33 +41,42 @@ The path consists of several components, each controlling navigation within the 
 3. **View (optional)** (`/hr/`): Represents a specific view. Each map may contain multiple views, and this part controls which one is shown.
 - **Note**: Some older maps, such as `/maps/lotus`, do not have views, but views are required for all new maps.
 
+### Query Parameters (Overview)
+
+Query parameters are key-value pairs appended to the URL after the `?` symbol and serve as the means of filtering data in our application. Below is a brief translation of how the filtering works:
+
+- **`+` = OR**: Combines multiple values within a domain or filter type, allowing for an inclusive condition (logical OR).
+- **`&` = AND**: Combines different query parameters, meaning that all conditions must be satisfied (logical AND).
+- **Default behavior**: If no specific filter type or domain is provided, all instances of the type are accepted.
+
 ### Query Parameters (in order of appearance)
 
-Query parameters are key-value pairs appended to the URL after the `?` symbol. They serve two main types of functions in our app:
+Query parameters are divided into two main categories: **Domain Type** and **Filter Type**. They allow users to dynamically control what data is displayed on the page.
 
-1. **Domain Type Query Parameters**  
-These parameters define the map's domain, such as region or type, and act as their own filtering layer. Unlike other filters, domains work with a logical AND in combination with other domains and filters. Domains can also support logical OR with the use of the `+` symbol.  
-   - **Examples**:
-     - `domain-Force=_police_force+military_force` – In this case, the domain is multi-domain, meaning it includes both `police_force` and `military_force` as separate filters.
-     - `domain-Region=_Brazil+_China+_Russia`
-     - `domain-BusinessService=_business-service_crime-prevention-service`
-     - `domain-PoliceForce=_police-force_leicestershire`
+#### 1. **Domain Type Query Parameters**  
+These parameters define the map's domain, such as region or type, and act as a separate filtering layer.
 
-2. **Filter Type Query Parameters**  
-   These parameters control data filtering on the page. They can be reset via a filter reset button and are set dynamically.
+- **Examples**:
+  - `domain-Force=_police_force+military_force` – A multi-domain filter, including both `police_force` and `military_force` as separate filters.
+  - `domain-Region=_Brazil+_China+_Russia`
+  - `domain-BusinessService=_business-service_crime-prevention-service`
+  - `domain-PoliceForce=_police-force_leicestershire`
 
-   - **plottable**: Controls the plot settings, allowing values such as `any`, `related`, `direct`, and `detached`.
-   - **s**: Filters items containing the specified text (string).
-   - **a**: Filters items by including or excluding specified classes. Multiple classes are concatenated with a `+` symbol, indicating a union (not an intersection). To exclude a class, `%21` (encoded `!`) is used.
-     - Example: `a=Brightspot+Category` includes items with either the "Brightspot" or "Category" class.
-     - Example: `a=%21Brightspot` excludes items with the "Brightspot" class.
-   - **rel**: Filters only items that are related to other items. Supports concatenation with `+` and exclusion with `%21`.
-     - Example: `rel=_painpoint_gp_tricky-patients+_stakeholder_capability`
-   - **kind**: Filters by category type, supporting inclusion and exclusion.
+#### 2. **Filter Type Query Parameters**  
+These parameters control data filtering on the page and are dynamically set. They can be reset via a filter reset button.
 
-3. **Grouping and Sorting** – Used for the list view:
-   - `group=`: Possible values `type`, `org`, `category`, and `stakeholder`
-   - `sort=`: Possible value `order`
+- **plottable**: Controls the plot settings, with possible values such as `any`, `related`, `direct`, and `detached`.
+- **s**: Filters items containing the specified search string.
+- **a**: Filters items by including or excluding specified classes. Multiple classes are combined using the `+` symbol (union), while exclusion uses `%21` (encoded `!`).
+  - Example: `a=Brightspot+Category` includes items with either the "Brightspot" or "Category" class.
+  - Example: `a=%21Brightspot` excludes items with the "Brightspot" class.
+- **rel**: Filters items that are related to other items, with support for concatenation (`+`) and exclusion (`%21`).
+  - Example: `rel=_painpoint_gp_tricky-patients+_stakeholder_capability`
+- **kind**: Filters by category type, supporting both inclusion and exclusion.
+
+#### 3. **Grouping and Sorting** – Used for the list view:
+  - `group=`: Possible values are `type`, `org`, `category`, and `stakeholder`.
+  - `sort=`: The only possible value is `order`.
 
 ### Fragment (always at the end of the URL)
 
@@ -77,8 +86,8 @@ In our application, the fragment (following the `#`) always appears at the end o
 
 The fragment serves two main purposes:
 
-1. **Navigating to Data Elements**: The fragment helps reference a specific data element in the application, which may not correspond directly to a static HTML element but to a data item identified by its IRI. For example, `#_stakeholder_distributor-owners` refers to a data item identified by the IRI.
+1. **Navigating to Data Elements**: Automatically zooms in on and centers a specific component within the Map view, highlighting it for easier identification and navigation.
    
-2. **Item Reference**: Fragments are used to create direct references to data items, enabling precise navigation to and interaction with specific data within the application. These IRIs do not include namespaces (prefixes), which are typically handled by `rdf.js` in our system. The fragment values are stripped of namespace prefixes and contain only the part of the IRI relevant to our platform’s identifiers.
+2. **Item Reference**: Keeps the reference to the selected item that can be opened different panels in the application. This IRI do not include namespaces (prefixes), which are typically handled by `rdf.js` in our system. The fragment values are stripped of namespace prefixes and contain only the part of the IRI relevant to our platform’s identifiers.
 
 **Note**: This behavior applies to all values in the query parameters, which are also based on IRI identifiers without namespaces.
