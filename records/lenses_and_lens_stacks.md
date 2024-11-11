@@ -157,7 +157,7 @@ Other objects can also have semantic tags applied - such as to be set as areas o
 
 Attributes such as fullName, anchorName, Class, kind etc. may also be added to semantic labels in the Semantic Attributes panel. 
 
-## Lens export assumptions and consequences: issues with lens stack and open layers
+## Lens export assumptions and consequences: issues with lens stack and openlayers
 At present, semantic export triggered from the Semantic Tree Tools panel assumes that all lenses present in the file should be exported. The automated tiling pipeline assumes that a parent lens is not transparent and should have a white background, while a child lens is assumed to be transparent, so that it can be used as an overlay on the parent lens. 
 
 The platform has concepts of parentLens, which also assumes that BOTH the tiles and labels from a child lens should appear together with the tiles and labels of a parent lens. While labels are valid, tiles were not originally conceived to be included by default. 
