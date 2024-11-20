@@ -1,9 +1,8 @@
-
 # URL Design on Shared Meaning Platform
 
 ## Sample URL
 
-https://staging.ecosystem.guide/maps/mgs-ds/hr?plottable=direct&s=in&a=%21Stakeholder&kind=capitalTypes%2Fhuman&rel=_crossmarket-theme_human-resources+%21_stakeholder_3pl
+https://staging.ecosystem.guide/maps/mgs-ds/hr?plottable=direct&s=in&a=!Stakeholder&kind=capitalTypes%2Fhuman&rel=\_crossmarket-theme\_human-resources+!\_stakeholder\_3pl
 
 ## Overview
 
@@ -13,8 +12,7 @@ A URL (Uniform Resource Locator) is an address that specifies the location of a 
 
 The typical structure of a URL is as follows:
 
-scheme://domain/path?query_parameters#fragment
-
+scheme://domain/path?query=parameters#fragment
 
 ### URL Components:
 
@@ -54,6 +52,7 @@ Query parameters are key-value pairs appended to the URL after the `?` symbol an
 Query parameters are divided into two main categories: **Domain Type** and **Filter Type**. They allow users to dynamically control what data is displayed on the page.
 
 #### 1. **Domain Type Query Parameters**  
+
 These parameters define the map's domain, such as region or type, and act as a separate filtering layer.
 
 - **Examples**:
@@ -62,7 +61,16 @@ These parameters define the map's domain, such as region or type, and act as a s
   - `domain-BusinessService=_business-service_crime-prevention-service`
   - `domain-PoliceForce=_police-force_leicestershire`
 
+<!--
+
+As discussed as part of the extensions to domains work landing, the url
+parameter should probably _just_ be the domain, and rely on uniqueness of the
+domain individuals to resolve which domain types are operated on.
+
+-->
+
 #### 2. **Filter Type Query Parameters**  
+
 These parameters control data filtering on the page and are dynamically set. They can be reset via a filter reset button.
 
 - **plottable**: Controls the plot settings, with possible values such as `any`, `related`, `direct`, and `detached`.
@@ -74,9 +82,12 @@ These parameters control data filtering on the page and are dynamically set. The
   - Example: `rel=_painpoint_gp_tricky-patients+_stakeholder_capability`
 - **kind**: Filters by category type, supporting both inclusion and exclusion.
 
-#### 3. **Grouping and Sorting** – Used for the list view:
+#### 3. **Grouping and Sorting**:
+
   - `group=`: Possible values are `type`, `org`, `category`, and `stakeholder`.
   - `sort=`: The only possible value is `order`.
+
+These have been used in list view, but are not visually distinguished on the map.
 
 ### Fragment (always at the end of the URL)
 
