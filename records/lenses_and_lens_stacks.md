@@ -1,6 +1,58 @@
 # Lenses and Lens Stack
 
-Sets of tiles and labels and their associated data can be considered lenses. We've also described these to consultants as being a focus on a slice of a model. 
+Lens is a common language where development can go so frontend can behave in consistent way.
+Sets of tiles and labels and their associated data can be considered lenses. We've also described these to consultants as being a focus on a slice of a model.
+
+## Understanding the Problem with Layer Blending
+
+#### Context-Dependent Layers:
+Normal maps consist of multiple togglable layers (e.g., rivers, streets) that users can activate or deactivate as needed.
+These layers often lack a fixed order and rely on user decisions to make sense within the current context.
+#### Blending Challenges:
+Layers must be semi-transparent and blend seamlessly to avoid visual clutter or misrepresentation.
+For example, comparing different datasets, such as maps from 2020 and 2024, often requires additive blending to highlight changes.
+A generalized blending model (e.g., lenses) requires prior knowledge of the context to ensure the resulting visualization is meaningful and coherent.
+
+
+## Tree Structure for Lenses
+The tree structute for lenses have certain things in mind:
+* **Hierarchical Organization** - The tree structure establishes a clear base layer (e.g., the foundational map) and organizes other layers in a logical hierarchy.
+Each branch or node in the tree reflects a contextual relationship to the base layer, ensuring that additional layers make sense within that specific spatial or temporal framework.
+* **Contextual Relevance** - Example: In comparing 2020 to 2024 maps, certain annotations (e.g., arrows indicating trends) might be relevant for 2020 but irrelevant or misleading for 2024.
+By predefining relationships between layers, the tree structure reduces ambiguity for users, ensuring that lenses applied to the map yield meaningful insights.
+* **Encouraging Better Design Practices** - The tree structure requires map creators to think critically about the dependencies and interactions between layers during the design phase.
+This proactive approach avoids confusion and ensures a consistent and intuitive user experience.
+The structure allows for flexibility in adding or modifying layers while maintaining a coherent framework, making it easier to adapt to evolving contexts or datasets.
+
+
+### Comceptual Challenges
+A primary challenge we are addressing is ensuring that map content remains both accessible and coherent, regardless of detail level, detail resolution, or active lenses. Users need to locate and interpret information seamlessly, even when specific features aren’t visible due to their current view. For instance, a user should be able to search for a feature and navigate to its location even if it’s not currently displayed because of detail-level constraints or panning.
+
+Another layer of complexity arises from the need to maintain visual and semantic coherence as users toggle between lenses. Each lens may introduce new content or modify the view, which can lead to overlapping or misaligned features. This raises the question: do the layers and lenses work together to provide a clear, meaningful narrative across varying levels of detail? For example, when comparing two maps (e.g., 2020 vs. 2024), semantic details like annotations or trends must align with the specific context of each version to avoid confusion.
+
+A tree structure provides a solution by organizing lenses hierarchically and logically. It helps define clear relationships between layers, ensuring that features exist conceptually within the lens even if they are temporarily hidden due to detail level or other constraints. This approach allows for short and descriptive naming conventions that encapsulate two critical aspects: what is being rendered (resolution, details, tiles) and what conceptual elements are present (features tied to the lens but not necessarily visible in the current view). This abstraction ensures that users can navigate seamlessly across the map, guided by the conceptual presence of features rather than their immediate visibility.
+
+However, implementation introduces challenges. Authors, for example, are often accustomed to the freedom of toggling layers on and off during map creation. Requiring structured organization or predefined naming conventions can feel like an unnecessary restriction. Balancing this need for structure with the flexibility authors expect is essential to avoid resistance and ensure adoption. Additionally, while much effort has gone into using layers and geographical lenses to convey detail, more interactive methods could be explored. We kind of have the Selected Item Panel allowing users to navigate parent-child relationships within the tree, but what can we do more?
+
+Finally, user experience must remain at the center of this design. Visual clarity is critical, especially when balancing the density of information at different detail levels. Adhering to principles like "seven items per screen" can help tie details to content in a way that reduces cognitive overload, moving beyond rigid grid-like tile designs to adapt content dynamically based on user interaction.
+
+By employing a tree structure, we address the fundamental need for clarity and usability while maintaining the flexibility authors require. This approach ensures that users can find and interpret map features intuitively, while also supporting more robust and interactive design possibilities.
+
+### Practical Challenges in Map Design
+One of the significant challenges lies in handling labels across zoom levels. Older maps often featured labels that were large and prominent when zoomed out, but as users zoomed in, the label size shrank, and its position shifted. While the label's general region remains the same, its precise location can vary significantly, making it difficult to provide a consistent user experience. Fallback solutions, such as landing at a fixed zoom level, often fall short. If the label’s position and size depend on the level of detail, users may encounter confusion about whether the label even exists at the current zoom level or where its “center point” truly lies.
+
+This issue becomes pronounced in one of the suggestion for LECM. Highlighting a specific semantic or geographical area requires not the label's placement but also mechanisms to express that a feature exists in one region while its label is displayed in another. Creating tools that allow map authors to define such relationships systematically, rather than ad hoc, is essential for clarity and usability.
+
+Another challenge is the conceptual approach to lenses. While they serve as a common language for frontend consistency, practical issues arise when a new feature or interaction is introduced without enough conceptual groundwork. Designing only at the functional level often leads to inconsistent and unpredictable results. For example, determining zoom interactions based on user input (“clicking on this item should zoom here”) may make sense intuitively but can become unmanageable when it requires manually defining thousands of specific areas without automated verification processes. This lack of systematic design risks creating expectations that are difficult, if not impossible, to meet.
+
+Subclassifying map designs introduces constraints that must be balanced. For certain types of maps, intricate interactions like area coloring or detailed highlighting might be avoided altogether due to the absence of well-defined or meaningful area classifications. Features like “coloring areas by classification” are only effective when the areas themselves are sensibly delineated. Without a reliable foundation, such features risk creating outputs that are nonsensical or misleading.
+
+### Work for Future Development
+We need start some groundwork:
+* The current approach ties detail levels closely to zoom levels. Decoupling these concepts would enable more flexible map interactions and allow creators to focus on semantic richness without being constrained by zoom-based representations.
+* Much of the current map content relies on markers to represent information. However, placing markers effectively, particularly when they represent features not physically present on the map, requires more thoughtful design. Simply displaying all items, suppliers, or relationships results in cluttered and overwhelming visuals that fail to communicate effectively. Instead, better aggregation techniques are needed, using metadata patterns, shapes, or other commonalities to group information in ways that enhance understanding while reducing visual noise.
+* Area-based features are necessary to make functionality like area bounding/coloring more systematic and reliable. For example, when showing classifications or highlighting specific areas, the system must rely on well-defined and meaningful area definitions. This involves not only fixing bugs but also ensuring that the data structure supports such interactions in a way that aligns with the map's overall conceptual integrity.
+
 
 ## Some important definitions
 
@@ -17,7 +69,6 @@ By "the embodied spatial metaphor of a map" we just mean using geographic map de
 
 ## Lenses in Adobe Illustrator & Semantic Tools
 
-To complement the Shared Meaning Platform, Semantic Tools (that are a plug-in to Adobe Illustrator that bring to life the concept of lenses for use in Adobe Illustrator where maps and their labels are designed) have been built. 
 
 Then concept of a lens on the Shared Meaning Platform must translate to how maps are created in and exported from Adobe Illustrator. 
 
