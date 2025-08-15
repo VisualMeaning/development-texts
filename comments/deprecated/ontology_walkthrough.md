@@ -1,3 +1,6 @@
+> [!WARNING]
+> This documentation is deprecated. It was never really relevant as we only used Grafo for ontology generation for a very short period, and our understanding of ontologies has expanded massively since it was written and we have substantial documentation/training resources elsewhere now. Retaining for historical interest only.
+
 # Creating Ontologies for the SMP
 
 An ontology is a file describing the classes, properties and relationships that make up the data models visualised by the Shared Meaning Platform.

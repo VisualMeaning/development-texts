@@ -1,3 +1,6 @@
+> [!WARNING]
+> This documentation is deprecated and does not reflect the current map upload process. Retaining for historical interest only.
+
 # Getting tiles and data from Illustrator to the SMP
 
 A basic guide on how to get tile and semantic labels exports from Adobe Illustrator processed and uploaded into the SMP. This is the upload process as of 2021-09-06.
