@@ -1,4 +1,5 @@
-> This document has been superseded by subsequent work, we have both the paid database plan with a rolling 4 day window, and backups that are encrypted and sent to external cloud storage on a daily basis.
+> [!WARNING]
+> This documentation is deprecated. We do not rely on Heroku's built-in backup/restore process and instead have our own process for capturing backups and shipping them to S3, which is [documented in the sm_platform repo](https://github.com/VisualMeaning/sm_platform/blob/master/scripts/Readme.md). Retaining this doc for historical interest only.
 
 # Backing up the Postgres Databases in Heroku
 

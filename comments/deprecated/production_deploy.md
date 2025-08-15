@@ -1,3 +1,6 @@
+> [!WARNING]
+> This documentation is deprecated. The current, up-to-date production deploy process is now documented on our Sharepoint [here](https://visualmeaning.sharepoint.com/:u:/r/sites/MethodologyandToolsReference/SitePages/Production-deploy.aspx?csf=1&web=1&share=EVenxIA5Z9hGsnX3friSAv8BcpNrOa9zIQTPYojUZwbEfA&e=pbsxa1). Retaining for historical interest only.
+
 # Production deploys of the Shared Meaning Platform
 
 This document outlines our process and steps for deploying the Shared Meaning Platform to our Production environment in Heroku.
